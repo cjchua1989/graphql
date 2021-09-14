@@ -1,10 +1,3 @@
-# MIDDLEWARES
- - ${file(./src/functions/middlewares/access_token_authorization/config.yml)} # Uncomment this if you want to implement access_token_middleware
- - ${file(./src/functions/middlewares/refresh_token_authorization/config.yml)} # Uncomment this if you want to implement refresh_token_middleware
-
 # APIS
 # - ${file(./src/functions/apis/<name>/config.yml)} # Duplicate this and add the name of the lambda function
- - ${file(./src/functions/apis/auth/config.yml)} # Remove this when you dont need it
- - ${file(./src/functions/apis/get_profile/config.yml)} # Remove this when you dont need it
- - ${file(./src/functions/apis/user_list/config.yml)} # Remove this when you dont need it
- - ${file(./src/functions/apis/user_list_dynamo/config.yml)} # Remove this when you dont need it
+

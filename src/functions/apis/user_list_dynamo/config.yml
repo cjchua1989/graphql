@@ -1,7 +1,0 @@
-user_list_dynamo:
-  handler: src/functions/apis/user_list_dynamo/handler.execute
-  events:
-    - http:
-        path: /user/dynamo
-        method: get
-        cors: true
