@@ -1,0 +1,22 @@
+graphql:
+  handler: src/functions/apis/graphql/handler.execute
+  events:
+    - http:
+        path: graphql-mutation
+        method: get
+        timeout: 30
+    - http:
+        path: graphql
+        method: post
+        cors: true
+        timeout: 30
+
+  environment:
+    MYSQLDB_URL: ${self:custom.MYSQLDB_URL}
+    MYSQLDB_NAME: ${self:custom.MYSQLDB_NAME}
+    MYSQLDB_USERNAME: ${self:custom.MYSQLDB_USERNAME}
+    MYSQLDB_PASSWORD: ${self:custom.MYSQLDB_PASSWORD}
+    MYSQLDB_PORT: ${self:custom.MYSQLDB_PORT}
+  warmup:
+    api:
+      enabled: 'prod'
