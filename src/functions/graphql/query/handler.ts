@@ -9,7 +9,6 @@ import { Container } from 'typeorm-typedi-extensions';
 
 import { Databases } from '../../../libs/Mysql';
 import { GraphQLSchema } from 'graphql';
-import { UserQueryResolver } from '../modules/users/UserQueryResolver';
 import { Logger } from '../../../libs/Logger';
 
 let SCHEMA: GraphQLSchema | undefined;
@@ -23,13 +22,13 @@ async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback
     const schema =
         SCHEMA ||
         (await TypeGraphQL.buildSchema({
-            resolvers: [UserQueryResolver],
+            resolvers: [__dirname + '/../modules/**/*QueryResolver.{ts,js}'],
             validate: false,
             container: Container,
         }));
 
     const server = new ApolloServer({ schema });
-    return server.createHandler()(event, context, callback);
+    server.createHandler()(event, context, callback);
 }
 
 export async function execute(
@@ -38,7 +37,7 @@ export async function execute(
     callback: Callback<APIGatewayProxyResult>,
 ): Promise<void> {
     try {
-        return await bootstrap(event, context, callback);
+        await bootstrap(event, context, callback);
     } catch (error) {
         Logger.error('Query', error);
     }
