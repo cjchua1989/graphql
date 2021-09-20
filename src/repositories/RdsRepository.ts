@@ -1,27 +1,27 @@
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { BaseEntity, Repository, SelectQueryBuilder } from 'typeorm';
 
-export interface PaginationInfo {
-    page: number;
-    limit: number;
+export interface PaginationResponse<T> {
+    max_page: number;
+    data: T[];
+    current_page: number;
 }
 
-export async function PagenateResult<T>(
-    query: SelectQueryBuilder<T>,
-    page_info: PaginationInfo,
-): Promise<{ max_page: number; current_page: number; data: T[] }> {
-    let max_page = 1;
-    if (page_info.page && page_info.limit && page_info.limit > 0) {
-        const page = page_info.page < 1 ? 0 : page_info.page - 1;
-        page_info.limit = page_info.limit > 50 || page_info.limit < 1 ? 50 : page_info.limit;
-        const offset = page_info.limit * page;
-        query.offset(offset);
-        const count = await query.getCount();
-        const modulus = count % page_info.limit;
-        max_page = (count - modulus) / page_info.limit + (modulus ? 1 : 0);
-        query.limit(page_info.limit);
+export class RdsRepository<T extends BaseEntity> extends Repository<T> {
+    async getList(page = 1, limit = 50): Promise<T[]> {
+        const { data } = await this.paginate(this.createQueryBuilder(), page, limit);
+        return data;
     }
-    const data = await query.getMany();
-    return { max_page, data, current_page: page_info.page };
-}
 
-export class RdsRepository<T> extends Repository<T> {}
+    async paginate(query: SelectQueryBuilder<T>, page = 1, limit = 50): Promise<PaginationResponse<T>> {
+        const count = await query.getCount();
+        const modulus = count % limit;
+        const max_page = (count - modulus) / limit + (modulus > 0 ? 1 : 0);
+
+        query.limit(limit).offset((page - 1) * limit);
+        return {
+            max_page,
+            current_page: page,
+            data: await query.getMany(),
+        };
+    }
+}

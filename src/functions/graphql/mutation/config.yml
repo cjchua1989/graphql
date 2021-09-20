@@ -1,9 +1,6 @@
-graphql:
+graphql_mutation:
   handler: src/functions/graphql/mutation/handler.execute
   events:
-    - http:
-        path: mutation
-        method: get
     - http:
         path: mutation
         method: post

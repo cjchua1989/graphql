@@ -1,9 +1,6 @@
-graphql:
+graphql_query:
   handler: src/functions/graphql/query/handler.execute
   events:
-    - http:
-        path: query
-        method: get
     - http:
         path: query
         method: post

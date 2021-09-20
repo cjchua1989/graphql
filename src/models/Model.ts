@@ -1,30 +1,23 @@
-import {
-    Column,
-    CreateDateColumn,
-    DeleteDateColumn,
-    Generated,
-    PrimaryGeneratedColumn,
-    UpdateDateColumn,
-    BaseEntity,
-} from 'typeorm';
+import { PrimaryColumn, CreateDateColumn, DeleteDateColumn, Generated, UpdateDateColumn, BaseEntity } from 'typeorm';
+import { Field, ID } from 'type-graphql';
 
 export class Model extends BaseEntity {
-    @Column({
+    @Field((type) => ID)
+    @PrimaryColumn({
         type: 'varchar',
         length: 50,
     })
     @Generated('uuid')
     public readonly uuid!: string;
 
-    @PrimaryGeneratedColumn()
-    public readonly id!: number;
-
     // timestamps
+    @Field({ description: 'Date the data was created' })
     @CreateDateColumn({
         type: 'varchar',
     })
     public created_at: string;
 
+    @Field({ description: 'Date the data was updated' })
     @UpdateDateColumn({
         type: 'varchar',
     })

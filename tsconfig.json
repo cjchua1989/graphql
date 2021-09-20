@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "preserveConstEnums": true,
-    "strictNullChecks": true,
-    "sourceMap": true,
-    "allowJs": true,
-    "target": "es2018",
-    "outDir": ".build",
+    "target": "es2017",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "lib": ["es2018", "esnext.asynciterable"],
+    "lib": ["es7", "esnext.asynciterable"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
     "rootDir": "./",
-    "emitDecoratorMetadata": true
-  }
+    "outDir": "dist",
+    "sourceMap": true
+  },
+  "include": [
+    "src/**/*"
+  ]
 }
