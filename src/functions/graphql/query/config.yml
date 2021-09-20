@@ -1,15 +1,13 @@
 graphql:
-  handler: src/functions/apis/graphql/handler.execute
+  handler: src/functions/graphql/query/handler.execute
   events:
     - http:
-        path: graphql-mutation
+        path: query
         method: get
-        timeout: 30
     - http:
-        path: graphql
+        path: query
         method: post
         cors: true
-        timeout: 30
 
   environment:
     MYSQLDB_URL: ${self:custom.MYSQLDB_URL}

@@ -1,0 +1,2 @@
+- ${file(./src/functions/graphql/mutation/config.yml)} # Duplicate this and add the name of the lambda function
+- ${file(./src/functions/graphql/query/config.yml)} # Duplicate this and add the name of the lambda function

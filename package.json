@@ -13,6 +13,7 @@
     "migrate:refresh": "npm run migrate:rollback && npm run migrate",
     "migrate:seed_user": "ts-node -r dotenv/config -e 'import { UserSeeder } from \"./src/seeder/UserSeeder\"; UserSeeder.seedMultipleUserData();'",
     "serve:app": "sls offline -c serverless-apis.yml",
+    "serve:graphql": "sls offline -c serverless-graphql.yml",
     "test": "jest --silent"
   },
   "author": "KnightRaven",

@@ -11,18 +11,20 @@ import { Container } from 'typedi';
 TypeORM.useContainer(Container);
 
 import { Databases } from '../../../libs/Mysql';
+import { GraphQLSchema } from 'graphql';
+
+let SCHEMA: GraphQLSchema | undefined;
 
 async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>) {
     await Databases.getConnection();
 
     // build TypeGraphQL executable schema
-    (global as any).schema =
-        (global as any).schema ||
+    const schema =
+        SCHEMA ||
         (await TypeGraphQL.buildSchema({
-            resolvers: ,
+            resolvers: [__dirname + '../modules/**/*MutationResolver.{ts,js}'],
             validate: false,
         }));
-    const schema = (global as any).schema;
 
     const server = new ApolloServer({ schema });
     server.createHandler()(event, context, callback);

@@ -1,4 +1,3 @@
 # APIS
 # - ${file(./src/functions/apis/<name>/config.yml)} # Duplicate this and add the name of the lambda function
-- ${file(./src/functions/apis/graphql/config.yml)} # Duplicate this and add the name of the lambda function
 
