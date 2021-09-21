@@ -8,10 +8,7 @@ import * as TypeGraphQL from 'type-graphql';
 import { Container } from 'typeorm-typedi-extensions';
 
 import { Databases } from '../../../libs/Mysql';
-import { GraphQLSchema } from 'graphql';
 import { Logger } from '../../../libs/Logger';
-
-let SCHEMA: GraphQLSchema | undefined;
 
 async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>) {
     // register 3rd party IOC container
@@ -19,16 +16,14 @@ async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback
     await Databases.getConnection();
 
     // build TypeGraphQL executable schema
-    const schema =
-        SCHEMA ||
-        (await TypeGraphQL.buildSchema({
-            resolvers: [__dirname + '/../modules/**/*MutationResolver.{ts,js}'],
-            validate: false,
-            container: Container,
-        }));
+    const schema = await TypeGraphQL.buildSchema({
+        resolvers: [__dirname + '/../modules/**/*MutationResolver.{ts,js}'],
+        validate: false,
+        container: Container,
+    });
 
     const server = new ApolloServer({ schema });
-    server.createHandler()(event, context, callback);
+    return server.createHandler()(event, context, callback);
 }
 
 export async function execute(
@@ -37,7 +32,7 @@ export async function execute(
     callback: Callback<APIGatewayProxyResult>,
 ): Promise<void> {
     try {
-        await bootstrap(event, context, callback);
+        return await bootstrap(event, context, callback);
     } catch (error) {
         Logger.error('Query', error);
     }

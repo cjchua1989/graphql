@@ -12,8 +12,8 @@ export class UserQueryResolver {
     ) {}
 
     @Query((returns) => [UserModel])
-    async users(@Args() params: ListUsersParams): Promise<UserModel[]> {
+    async users(@Args() { page, limit }: ListUsersParams): Promise<UserModel[]> {
         const action = new ListUsersAction(this.userRepository);
-        return await action.execute(params);
+        return await action.execute(page, limit);
     }
 }

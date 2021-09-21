@@ -22,7 +22,7 @@ export class ListUsersAction {
         this.repository = repository;
     }
 
-    async execute(params: ListUsersParams): Promise<UserModel[]> {
-        return await this.repository.getList(params.page, params.limit);
+    async execute(page: number, limit: number): Promise<UserModel[]> {
+        return await this.repository.getList(page, limit);
     }
 }
