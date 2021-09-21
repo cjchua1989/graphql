@@ -9,6 +9,10 @@ import { Container } from 'typeorm-typedi-extensions';
 
 import { Databases } from '../../../libs/Mysql';
 import { Logger } from '../../../libs/Logger';
+import { loader, Type } from '../modules/loader';
+import { GraphQLSchema } from 'graphql';
+
+let SCHEMA: GraphQLSchema | undefined;
 
 async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>) {
     // register 3rd party IOC container
@@ -16,13 +20,15 @@ async function bootstrap(event: APIGatewayProxyEvent, context: Context, callback
     await Databases.getConnection();
 
     // build TypeGraphQL executable schema
-    const schema = await TypeGraphQL.buildSchema({
-        resolvers: [__dirname + '/../modules/**/*MutationResolver.{ts,js}'],
-        validate: false,
-        container: Container,
-    });
+    SCHEMA =
+        SCHEMA ??
+        TypeGraphQL.buildSchemaSync({
+            resolvers: loader(Type.MUTATION),
+            validate: false,
+            container: Container,
+        });
 
-    const server = new ApolloServer({ schema });
+    const server = new ApolloServer({ schema: SCHEMA });
     return server.createHandler()(event, context, callback);
 }
 
