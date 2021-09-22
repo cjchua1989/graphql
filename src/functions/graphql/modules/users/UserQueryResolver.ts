@@ -1,10 +1,12 @@
 import { Arg, Args, Query, Resolver } from 'type-graphql';
-import { ListUsersAction, ListUsersParams } from './Actions/ListUsersAction';
+import { ListUsersAction } from './Actions/ListUsersAction';
 import { UserModel } from '../../../../models/UserModel';
 import { Inject } from 'typedi';
 import { GetUserAction } from './Actions/GetUserAction';
+import { ListUsersParams } from './Actions/Parameters';
+import { UserPagination } from './Actions/UserPagination';
 
-@Resolver(() => UserModel)
+@Resolver()
 export class UserQueryResolver {
     @Inject() GetUserAction: GetUserAction;
     @Inject() ListUsersAction: ListUsersAction;
@@ -14,8 +16,8 @@ export class UserQueryResolver {
         return await this.GetUserAction.execute(id);
     }
 
-    @Query(() => [UserModel])
-    async users(@Args() { page, limit }: ListUsersParams): Promise<UserModel[]> {
+    @Query(() => UserPagination)
+    async users(@Args() { page, limit }: ListUsersParams): Promise<UserPagination> {
         return await this.ListUsersAction.execute(page, limit);
     }
 }

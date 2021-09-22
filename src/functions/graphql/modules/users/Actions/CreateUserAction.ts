@@ -1,57 +1,11 @@
-import { Field, InputType } from 'type-graphql';
-import { MaxLength, IsEmail, Matches } from 'class-validator';
-import { InjectRepository } from 'typeorm-typedi-extensions';
-import { UserRepository } from '../../../../../repositories/UserRepository';
 import { UserModel } from '../../../../../models/UserModel';
-import { CoreAction } from '../../core/CoreAction';
-import { Service } from "typedi";
-
-@InputType()
-export class CreateUserInput {
-    @Field()
-    @MaxLength(50)
-    @IsEmail()
-    email: string;
-
-    @Field()
-    @MaxLength(12)
-    @Matches(/^639\d{9}$/)
-    mobile: string;
-
-    @Field()
-    @MaxLength(100)
-    password: string;
-
-    @Field()
-    @MaxLength(100)
-    name: string;
-}
-
-class EmailExist extends Error {
-    name = 'EmailExist';
-    code = 'EMAIL_EXIST';
-    constructor() {
-        super('Email Address already exist');
-    }
-}
-
-class MobileExist extends Error {
-    name = 'MobileExist';
-    code = 'MOBILE_EXIST';
-    constructor() {
-        super('Mobile Number already exist');
-    }
-}
+import { Service } from 'typedi';
+import { EmailExist, MobileExist } from './Errors';
+import { CreateUserInput } from './Parameters';
+import { BaseAction } from './BaseAction';
 
 @Service()
-export class CreateUserAction extends CoreAction {
-    constructor(
-        @InjectRepository()
-        private readonly repository: UserRepository,
-    ) {
-        super();
-    }
-
+export class CreateUserAction extends BaseAction {
     async execute(request: CreateUserInput): Promise<UserModel> {
         const email_exist = await this.repository.isEmailExisting(request.email);
         if (email_exist) throw new EmailExist();
