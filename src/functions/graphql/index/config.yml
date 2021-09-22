@@ -1,8 +1,8 @@
-graphql_query:
-  handler: src/functions/graphql/query/handler.execute
+graphql:
+  handler: src/functions/graphql/index/handler.execute
   events:
     - http:
-        path: query
+        path: graphql
         method: post
         cors: true
 

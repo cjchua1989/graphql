@@ -95,6 +95,6 @@ export function THROW_ERROR(error: EventResponse): EventResponse {
 }
 
 export function RESPONSE(response: EventResponse): EventResponse {
-    Logger.error('Event Response', { response });
+    Logger.info('Event Response', { response });
     return response;
 }

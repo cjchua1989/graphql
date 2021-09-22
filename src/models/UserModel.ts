@@ -22,6 +22,13 @@ export class UserModel extends Model {
     })
     mobile: string;
 
+    @Field({ description: 'Name of the user' })
+    @Column({
+        type: 'varchar',
+        length: 100,
+    })
+    name: string;
+
     @Column({
         type: 'text',
         name: 'password',

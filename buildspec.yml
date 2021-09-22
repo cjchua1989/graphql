@@ -26,7 +26,7 @@ phases:
       - PARAMETER="env"
       - PARAM_KEY="$PARAM_PREFIX/$PARAMETER"
       - DEST_FILENAME="herpderp.${STAGE}"
-      - aws ssm get-parameter --name $PARAM_KEY --region $REGION --output text --query Parameter.Value > $DEST_FILENAME
+      - aws ssm get-parameter --name $PARAM_KEY --region $REGION --output text --index Parameter.Value > $DEST_FILENAME
       - export $(grep -v '^#' $DEST_FILENAME | xargs -d '\n')
   build:
     commands:

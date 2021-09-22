@@ -1,19 +1,21 @@
-import { Args, Query, Resolver } from 'type-graphql';
+import { Arg, Args, Query, Resolver } from 'type-graphql';
 import { ListUsersAction, ListUsersParams } from './Actions/ListUsersAction';
 import { UserModel } from '../../../../models/UserModel';
-import { UserRepository } from '../../../../repositories/UserRepository';
-import { InjectRepository } from 'typeorm-typedi-extensions';
+import { Inject } from 'typedi';
+import { GetUserAction } from './Actions/GetUserAction';
 
-@Resolver((of) => UserModel)
+@Resolver(() => UserModel)
 export class UserQueryResolver {
-    constructor(
-        @InjectRepository()
-        private readonly userRepository: UserRepository,
-    ) {}
+    @Inject() GetUserAction: GetUserAction;
+    @Inject() ListUsersAction: ListUsersAction;
 
-    @Query((returns) => [UserModel])
+    @Query(() => UserModel)
+    async user(@Arg('id') id: string): Promise<UserModel> {
+        return await this.GetUserAction.execute(id);
+    }
+
+    @Query(() => [UserModel])
     async users(@Args() { page, limit }: ListUsersParams): Promise<UserModel[]> {
-        const action = new ListUsersAction(this.userRepository);
-        return await action.execute(page, limit);
+        return await this.ListUsersAction.execute(page, limit);
     }
 }

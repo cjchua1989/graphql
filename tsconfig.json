@@ -1,19 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
+    "preserveConstEnums": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "target": "es5",
+    "outDir": ".build",
     "moduleResolution": "node",
-    "lib": ["es7", "esnext.asynciterable"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
+    "lib": ["es2015"],
     "rootDir": "./",
-    "outDir": "dist",
-    "sourceMap": true
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true
   },
-  "include": [
-    "src/**/*"
-  ]
+  "exclude": ["./node_modules", "**/*.spec.ts"]
 }

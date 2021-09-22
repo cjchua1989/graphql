@@ -1,22 +1,21 @@
 {
-  "name": "aws-lambda",
-  "version": "2.0.0",
-  "description": "Boiler Plate serverless",
+  "name": "graphql-sls",
+  "version": "1.0.0",
+  "description": "GraphQL BoilerPlate serverless ",
   "scripts": {
     "start": "docker-compose up -d",
     "stop": "docker-compose stop",
     "swagger:build": "eslint --ext .ts docs/swagger --fix && ts-node docs/swagger/generate.ts",
     "lint": "eslint --ext .ts src/ --fix",
-    "dynamo:migrate": "ts-node -r dotenv/config dynamodb_migration.ts",
     "migrate": "node migrations.js up",
     "migrate:rollback": "node migrations.js down 100",
     "migrate:refresh": "npm run migrate:rollback && npm run migrate",
     "migrate:seed_user": "ts-node -r dotenv/config -e 'import { UserSeeder } from \"./src/seeder/UserSeeder\"; UserSeeder.seedMultipleUserData();'",
     "serve:app": "sls offline -c serverless-apis.yml",
-    "serve:graphql": "sls offline -c serverless-graphql.yml",
+    "serve:graphql": "tsc && sls offline -c serverless-graphql.yml",
     "test": "jest --silent"
   },
-  "author": "KnightRaven",
+  "author": "Dexter, Ed, CJ",
   "license": "ISC",
   "devDependencies": {
     "@types/faker": "^5.5.6",

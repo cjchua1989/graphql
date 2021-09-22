@@ -4,23 +4,23 @@ moment.tz.setDefault(process.env.CARBON_TIMEZONE ?? 'Asia/Manila');
 
 export class Carbon {
     static now(): moment.Moment {
-        return moment();
+        return moment.default();
     }
 
     static nowFormatted(): string {
-        return moment().format('YYYY-MM-DD HH:mm:ss');
+        return moment.default().format('YYYY-MM-DD HH:mm:ss');
     }
 
     static nowFormattedWithHash(): string {
-        return moment().format('YYYY-MM-DD HH:mm:ss') + `#${v4()}`;
+        return moment.default().format('YYYY-MM-DD HH:mm:ss') + `#${v4()}`;
     }
 
     static yesterday(): moment.Moment {
-        return moment().subtract(1, 'day');
+        return moment.default().subtract(1, 'day');
     }
 
     static parse(date: string, format = ''): moment.Moment {
-        return moment(date, format);
+        return moment.default(date, format);
     }
 
     static logicDate(): moment.Moment {

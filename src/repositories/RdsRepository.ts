@@ -1,4 +1,5 @@
 import { BaseEntity, Repository, SelectQueryBuilder } from 'typeorm';
+import { Service } from 'typedi';
 
 export interface PaginationResponse<T> {
     max_page: number;
@@ -6,6 +7,7 @@ export interface PaginationResponse<T> {
     current_page: number;
 }
 
+@Service()
 export class RdsRepository<T extends BaseEntity> extends Repository<T> {
     async getList(page = 1, limit = 50): Promise<T[]> {
         const { data } = await this.paginate(this.createQueryBuilder(), page, limit);
