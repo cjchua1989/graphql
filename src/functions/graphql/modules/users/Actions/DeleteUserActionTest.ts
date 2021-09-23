@@ -6,8 +6,9 @@ import faker from 'faker';
 import { Logger } from '../../../../../libs/Logger';
 import { UserSeeder } from '../../../../../seeder/UserSeeder';
 
+TypeORM.useContainer(Container);
+
 test('USER_NOT_FOUND', async () => {
-    TypeORM.useContainer(Container);
     await Databases.getConnection();
     const action = Container.get(DeleteUserAction);
 
@@ -26,7 +27,6 @@ test('USER_NOT_FOUND', async () => {
 });
 
 test('SUCCESS', async () => {
-    TypeORM.useContainer(Container);
     await Databases.getConnection();
     const seeder = Container.get(UserSeeder);
     const user = await seeder.run();

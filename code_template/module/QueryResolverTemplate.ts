@@ -16,8 +16,8 @@ export class <NAME> {
     @Inject() <LIST_ACTION>: <LIST_ACTION>;
 
     @Query(() => <MODEL>)
-    async <GET_METHOD>(@Arg('id') id: string): Promise<<MODEL>> {
-        return await this.<GET_ACTION>.execute(id);
+    async <GET_METHOD>(@Arg('uuid') uuid: string): Promise<<MODEL>> {
+        return await this.<GET_ACTION>.execute(uuid);
     }
 
     @Query(() => <PAGINATION>)
@@ -28,25 +28,33 @@ export class <NAME> {
 `;
 
 export class QueryResolverTemplate extends BaseTemplate {
-    generate(): void {
-        const name = pascalCase(`${this.module}_query_resolver`);
-        const model = pascalCase(`${this.module}_model`);
-        const list_action = pascalCase(`list_${this.modules}_action`);
-        const get_action = pascalCase(`get_${this.module}_action`);
-        const list_params = pascalCase(`list_${this.modules}_input`);
-        const pagination = pascalCase(`${this.module}_pagination`);
-        const filename = `${name}.ts`;
+    get path(): string {
+        return `./src/functions/graphql/modules/${this.modules}`;
+    }
 
-        const CONTENT = TEMPLATE.replace(/<NAME>/g, name)
-            .replace(/<MODULE>/g, this.module)
-            .replace(/<MODEL>/g, model)
-            .replace(/<LIST_ACTION>/g, list_action)
-            .replace(/<GET_ACTION>/g, get_action)
-            .replace(/<LIST_PARAMS>/g, list_params)
-            .replace(/<PAGINATION>/g, pagination)
-            .replace(/<GET_METHOD>/g, this.module)
-            .replace(/<LIST_METHOD>/g, this.modules);
+    get filename(): string {
+        return pascalCase(`${this.module}_query_resolver`) + '.ts';
+    }
 
-        super.generate(`./src/functions/graphql/${this.modules}`, filename, CONTENT);
+    get content(): string {
+        const NAME = pascalCase(`${this.module}_query_resolver`);
+        const MODEL = pascalCase(`${this.module}_model`);
+        const LIST_ACTION = pascalCase(`list_${this.modules}_action`);
+        const GET_ACTION = pascalCase(`get_${this.module}_action`);
+        const LIST_PARAMS = pascalCase(`list_${this.modules}_input`);
+        const PAGINATION = pascalCase(`${this.modules}_pagination`);
+        const GET_METHOD = this.module;
+        const LIST_METHOD = this.modules;
+
+        return this.process(TEMPLATE, {
+            NAME,
+            MODEL,
+            LIST_ACTION,
+            GET_ACTION,
+            LIST_PARAMS,
+            PAGINATION,
+            GET_METHOD,
+            LIST_METHOD,
+        });
     }
 }

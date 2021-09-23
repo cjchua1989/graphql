@@ -6,8 +6,9 @@ import { UserSeeder } from '../../../../../seeder/UserSeeder';
 import faker from 'faker';
 import { Logger } from '../../../../../libs/Logger';
 
+TypeORM.useContainer(Container);
+
 test('EMAIL_EXIST', async () => {
-    TypeORM.useContainer(Container);
     await Databases.getConnection();
     const seeder = Container.get(UserSeeder);
     const user = await seeder.run();
@@ -32,7 +33,6 @@ test('EMAIL_EXIST', async () => {
     }
 });
 test('MOBILE_EXIST', async () => {
-    TypeORM.useContainer(Container);
     await Databases.getConnection();
     const seeder = Container.get(UserSeeder);
     const user = await seeder.run();
@@ -57,7 +57,6 @@ test('MOBILE_EXIST', async () => {
     }
 });
 test('SUCCESS', async () => {
-    TypeORM.useContainer(Container);
     await Databases.getConnection();
     const action = Container.get(CreateUserAction);
 

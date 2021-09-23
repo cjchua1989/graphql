@@ -5,23 +5,28 @@ const TEMPLATE = `
 export class <NOT_FOUND> extends Error {
     name = '<NOT_FOUND>';
     code = '<UC_NOT_FOUND>';
-    constructor() {
-        super('<UC_MODULE> Not Found');
-    }
+    message = '<UC_MODULE> Not Found';
 }
 `;
 
 export class ErrorsTemplate extends BaseTemplate {
-    generate(): void {
-        const not_found = pascalCase(`${this.module}_not_found`);
-        const uc_not_found = snakeCase(`${this.module}_not_found`).toUpperCase();
-        const uc_module = pascalCase(this.module);
-        const filename = 'Errors.ts';
+    get path(): string {
+        return `./src/functions/graphql/modules/${this.modules}/Actions`;
+    }
 
-        const CONTENT = TEMPLATE.replace(/<NOT_FOUND>/g, not_found)
-            .replace(/<UC_NOT_FOUND>/g, uc_not_found)
-            .replace(/<UC_MODULE>/g, uc_module);
+    get filename(): string {
+        return 'Errors.ts';
+    }
 
-        super.generate(`./src/functions/graphql/${this.modules}/Actions`, filename, CONTENT);
+    get content(): string {
+        const NOT_FOUND = pascalCase(`${this.module}_not_found`);
+        const UC_NOT_FOUND = snakeCase(`${this.module}_not_found`).toUpperCase();
+        const UC_MODULE = pascalCase(this.module);
+
+        return this.process(TEMPLATE, {
+            NOT_FOUND,
+            UC_NOT_FOUND,
+            UC_MODULE,
+        });
     }
 }

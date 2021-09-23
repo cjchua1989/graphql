@@ -10,8 +10,9 @@ import { <SEEDER> } from '../../../../../seeder/<SEEDER>';
 import faker from 'faker';
 import { Logger } from '../../../../../libs/Logger';
 
+TypeORM.useContainer(Container);
+
 test('SUCCESS', async () => {
-    TypeORM.useContainer(Container);
     await Databases.getConnection();
     const action = Container.get(<CREATE_ACTION>);
 
@@ -26,11 +27,20 @@ test('SUCCESS', async () => {
 `;
 
 export class CreateActionTestTemplate extends BaseTemplate {
-    generate(): void {
-        const create_action = pascalCase(`create_${this.module}_action`);
-        const seeder = pascalCase(`${this.module}_seeder`);
-        const filename = `${create_action}Test.ts`;
-        const CONTENT = TEMPLATE.replace(/<CREATE_ACTION>/g, create_action).replace(/<SEEDER>/g, seeder);
-        super.generate(`./src/functions/graphql/${this.modules}/Actions`, filename, CONTENT);
+    get path(): string {
+        return `./src/functions/graphql/modules/${this.modules}/Actions`;
+    }
+
+    get filename(): string {
+        return pascalCase(`create_${this.module}_action_test`) + '.ts';
+    }
+
+    get content(): string {
+        const CREATE_ACTION = pascalCase(`create_${this.module}_action`);
+        const SEEDER = pascalCase(`${this.module}_seeder`);
+        return this.process(TEMPLATE, {
+            CREATE_ACTION,
+            SEEDER,
+        });
     }
 }

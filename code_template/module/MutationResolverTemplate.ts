@@ -17,7 +17,7 @@ export class <NAME> {
     @Inject() <DELETE_ACTION>: <DELETE_ACTION>;
 
     @Mutation(() => <MODEL>)
-    async <CREATE_METHOD>(@Arg('<MODULE>') <MODULE>: <CREATE_INPUT>): Promise<<MODEL> {
+    async <CREATE_METHOD>(@Arg('<MODULE>') <MODULE>: <CREATE_INPUT>): Promise<<MODEL>> {
         return await this.<CREATE_ACTION>.execute(<MODULE>);
     }
 
@@ -34,32 +34,40 @@ export class <NAME> {
 `;
 
 export class MutationResolverTemplate extends BaseTemplate {
-    generate(): void {
-        const name = pascalCase(`${this.module}_mutation_resolver`);
-        const model = pascalCase(`${this.module}_model`);
-        const create_action = pascalCase(`create_${this.module}_action`);
-        const update_action = pascalCase(`update_${this.module}_action`);
-        const delete_action = pascalCase(`delete_${this.module}_action`);
-        const create_input = pascalCase(`create_${this.module}_input`);
-        const update_input = pascalCase(`update_${this.module}_input`);
+    get path(): string {
+        return `./src/functions/graphql/modules/${this.modules}`;
+    }
 
-        const create_method = camelCase(`create_${this.module}`);
-        const update_method = camelCase(`update_${this.module}`);
-        const delete_method = camelCase(`delete_${this.module}`);
-        const filename = `${name}.ts`;
+    get filename(): string {
+        return pascalCase(`${this.module}_mutation_resolver`) + '.ts';
+    }
 
-        const CONTENT = TEMPLATE.replace(/<NAME>/g, name)
-            .replace(/<MODULE>/g, this.module)
-            .replace(/<MODEL>/g, model)
-            .replace(/<CREATE_ACTION>/g, create_action)
-            .replace(/<UPDATE_ACTION>/g, update_action)
-            .replace(/<DELETE_ACTION>/g, delete_action)
-            .replace(/<CREATE_INPUT>/g, create_input)
-            .replace(/<UPDATE_INPUT>/g, update_input)
-            .replace(/<CREATE_METHOD>/g, create_method)
-            .replace(/<UPDATE_METHOD>/g, update_method)
-            .replace(/<DELETE_METHOD>/g, delete_method);
+    get content(): string {
+        const NAME = pascalCase(`${this.module}_mutation_resolver`);
+        const MODEL = pascalCase(`${this.module}_model`);
+        const CREATE_ACTION = pascalCase(`create_${this.module}_action`);
+        const UPDATE_ACTION = pascalCase(`update_${this.module}_action`);
+        const DELETE_ACTION = pascalCase(`delete_${this.module}_action`);
+        const CREATE_INPUT = pascalCase(`create_${this.module}_input`);
+        const UPDATE_INPUT = pascalCase(`update_${this.module}_input`);
 
-        super.generate(`./src/functions/graphql/${this.modules}`, filename, CONTENT);
+        const CREATE_METHOD = camelCase(`create_${this.module}`);
+        const UPDATE_METHOD = camelCase(`update_${this.module}`);
+        const DELETE_METHOD = camelCase(`delete_${this.module}`);
+        const MODULE = this.module;
+
+        return this.process(TEMPLATE, {
+            NAME,
+            MODEL,
+            CREATE_ACTION,
+            UPDATE_ACTION,
+            DELETE_ACTION,
+            CREATE_INPUT,
+            UPDATE_INPUT,
+            CREATE_METHOD,
+            UPDATE_METHOD,
+            DELETE_METHOD,
+            MODULE,
+        });
     }
 }

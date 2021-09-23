@@ -20,14 +20,23 @@ export class <NAME> extends BaseAction {
 `;
 
 export class CreateActionTemplate extends BaseTemplate {
-    generate(): void {
-        const name = pascalCase(`create_${this.module}_action`);
-        const filename = `${name}.ts`;
-        const model = pascalCase(`${this.module}_model`);
-        const create_input = pascalCase(`create_${this.module}_input`);
-        const CONTENT = TEMPLATE.replace(/<NAME>/g, name)
-            .replace(/<MODEL>/g, model)
-            .replace(/<CREATE_INPUT>/g, create_input);
-        super.generate(`./src/functions/graphql/${this.modules}/Actions`, filename, CONTENT);
+    get path(): string {
+        return `./src/functions/graphql/modules/${this.modules}/Actions`;
+    }
+
+    get filename(): string {
+        return pascalCase(`create_${this.module}_action`) + '.ts';
+    }
+
+    get content(): string {
+        const NAME = pascalCase(`create_${this.module}_action`);
+        const MODEL = pascalCase(`${this.module}_model`);
+        const CREATE_INPUT = pascalCase(`create_${this.module}_input`);
+
+        return this.process(TEMPLATE, {
+            NAME,
+            MODEL,
+            CREATE_INPUT,
+        });
     }
 }

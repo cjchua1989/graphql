@@ -17,10 +17,16 @@ export class BaseAction extends CoreAction {
 `;
 
 export class BaseActionTemplate extends BaseTemplate {
-    generate(): void {
-        const filename = 'BaseAction.ts';
-        const repository = pascalCase(`${this.module}_repository`);
-        const CONTENT = TEMPLATE.replace(/<REPOSITORY>/g, repository);
-        super.generate(`./src/functions/graphql/${this.modules}/Actions`, filename, CONTENT);
+    get path(): string {
+        return `./src/functions/graphql/modules/${this.modules}/Actions`;
+    }
+    get filename(): string {
+        return 'BaseAction.ts';
+    }
+    get content(): string {
+        const REPOSITORY = pascalCase(`${this.module}_repository`);
+        return this.process(TEMPLATE, {
+            REPOSITORY,
+        });
     }
 }

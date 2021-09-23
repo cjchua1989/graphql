@@ -3,13 +3,16 @@ import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserRepository } from '../repositories/UserRepository';
 import { UserModel } from '../models/UserModel';
 import * as faker from 'faker';
+import { CoreSeeder, SeederInterface } from './CoreSeeder';
 
 @Service()
-export class UserSeeder {
+export class UserSeeder extends CoreSeeder implements SeederInterface<UserModel> {
     constructor(
         @InjectRepository()
         private readonly repository: UserRepository,
-    ) {}
+    ) {
+        super();
+    }
 
     async run(): Promise<UserModel> {
         const user = new UserModel();

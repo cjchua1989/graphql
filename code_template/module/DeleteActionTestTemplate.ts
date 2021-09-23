@@ -10,8 +10,9 @@ import faker from 'faker';
 import { Logger } from '../../../../../libs/Logger';
 import { <SEEDER> } from '../../../../../seeder/<SEEDER>';
 
+TypeORM.useContainer(Container);
+
 test('<UC_NOT_FOUND>', async () => {
-    TypeORM.useContainer(Container);
     await Databases.getConnection();
     const action = Container.get(<DELETE_ACTION>);
 
@@ -30,7 +31,6 @@ test('<UC_NOT_FOUND>', async () => {
 });
 
 test('SUCCESS', async () => {
-    TypeORM.useContainer(Container);
     await Databases.getConnection();
     const seeder = Container.get(<SEEDER>);
     const entity = await seeder.run();
@@ -43,20 +43,27 @@ test('SUCCESS', async () => {
 `;
 
 export class DeleteActionTestTemplate extends BaseTemplate {
-    generate(): void {
-        const delete_action = pascalCase(`delete_${this.module}_action`);
-        const seeder = pascalCase(`${this.module}_seeder`);
-        const uc_not_found = snakeCase(`${this.module}_not_found`).toUpperCase();
-        const not_found = pascalCase(`${this.module}_not_found`);
-        const uc_module = pascalCase(this.module);
-        const filename = `${delete_action}Test.ts`;
+    get path(): string {
+        return `./src/functions/graphql/modules/${this.modules}/Actions`;
+    }
 
-        const CONTENT = TEMPLATE.replace(/<DELETE_ACTION>/g, delete_action)
-            .replace(/<SEEDER>/g, seeder)
-            .replace(/<UC_NOT_FOUND>/g, uc_not_found)
-            .replace(/<NOT_FOUND>/g, not_found)
-            .replace(/<UC_MODULE>/g, uc_module);
+    get filename(): string {
+        return pascalCase(`delete_${this.module}_action_test`) + '.ts';
+    }
 
-        super.generate(`./src/functions/graphql/${this.modules}/Actions`, filename, CONTENT);
+    get content(): string {
+        const DELETE_ACTION = pascalCase(`delete_${this.module}_action`);
+        const SEEDER = pascalCase(`${this.module}_seeder`);
+        const UC_NOT_FOUND = snakeCase(`${this.module}_not_found`).toUpperCase();
+        const NOT_FOUND = pascalCase(`${this.module}_not_found`);
+        const UC_MODULE = pascalCase(this.module);
+
+        return this.process(TEMPLATE, {
+            DELETE_ACTION,
+            SEEDER,
+            UC_NOT_FOUND,
+            NOT_FOUND,
+            UC_MODULE,
+        });
     }
 }

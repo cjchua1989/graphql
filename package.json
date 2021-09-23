@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/faker": "^5.5.6",
     "@types/jest": "^26.0.20",
+    "@types/pluralize": "^0.0.29",
     "@types/yargs": "^15.0.12",
     "aws-sdk": "^2.919.0",
     "case-anything": "^1.1.2",

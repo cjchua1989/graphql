@@ -5,8 +5,9 @@ import { Databases } from '../../../../../libs/Mysql';
 import { Logger } from '../../../../../libs/Logger';
 import { UserSeeder } from '../../../../../seeder/UserSeeder';
 
+TypeORM.useContainer(Container);
+
 test('SUCCESS', async () => {
-    TypeORM.useContainer(Container);
     await Databases.getConnection();
     const seeder = Container.get(UserSeeder);
     await seeder.run();

@@ -1,7 +1,5 @@
 import { Carbon } from '../src/libs/Carbon';
-import { writeFileSync, existsSync } from 'fs';
 import { snakeCase } from 'case-anything';
-import * as pluralize from 'pluralize';
 import { BaseTemplate } from './BaseTemplate';
 
 const TEMPLATE = `
@@ -22,13 +20,18 @@ module.exports = {
 `;
 
 export class MigrationTemplate extends BaseTemplate {
-    generate(): void {
-        const name = snakeCase(pluralize(this.module));
-        const filename = `${Carbon.now().valueOf()}_${this.module}_table.js`;
+    get path(): string {
+        return `./migrations`;
+    }
 
-        if (existsSync(`./migrations/${filename}`)) throw new Error('Migration file already existed');
+    get filename(): string {
+        return `${Carbon.now().valueOf()}_${this.module}_table.js`;
+    }
 
-        const CONTENT = TEMPLATE.replace(/<TABLE>/g, name).trim();
-        writeFileSync(`./migrations/${filename}`, CONTENT);
+    get content(): string {
+        const TABLE = snakeCase(this.modules);
+        return this.process(TEMPLATE, {
+            TABLE,
+        });
     }
 }

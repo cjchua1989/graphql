@@ -27,11 +27,20 @@ export class <NAME> extends BaseAction {
 `;
 
 export class DeleteActionTemplate extends BaseTemplate {
-    generate(): void {
-        const name = pascalCase(`delete_${this.module}_action`);
-        const not_found = pascalCase(`${this.module}_not_found`);
-        const filename = `${name}Test.ts`;
-        const CONTENT = TEMPLATE.replace(/<NAME>/, name).replace(/<NOT_FOUND>/, not_found);
-        super.generate(`./src/functions/graphql/${this.modules}/Actions`, filename, CONTENT);
+    get path(): string {
+        return `./src/functions/graphql/modules/${this.modules}/Actions`;
+    }
+
+    get filename(): string {
+        return pascalCase(`delete_${this.module}_action`) + '.ts';
+    }
+
+    get content(): string {
+        const NAME = pascalCase(`delete_${this.module}_action`);
+        const NOT_FOUND = pascalCase(`${this.module}_not_found`);
+        return this.process(TEMPLATE, {
+            NAME,
+            NOT_FOUND,
+        });
     }
 }

@@ -2,39 +2,45 @@ import { BaseTemplate } from '../BaseTemplate';
 import { pascalCase } from 'case-anything';
 
 const TEMPLATE = `
-import { <MODEL> } from '../../../../../models/<MODEL>';
 import { Service } from 'typedi';
-import { <NOT_FOUND> } from './Errors';
 import { BaseAction } from './BaseAction';
+import { <UPDATE_INPUT> } from './Parameters';
+import { <MODEL> } from '../../../../../models/<MODEL>';
+import { <NOT_FOUND> } from './Errors';
 
 @Service()
 export class <NAME> extends BaseAction {
-    async execute(uuid: string): Promise<<MODEL>> {
+    async execute(uuid: string, request: <UPDATE_INPUT>): Promise<<MODEL>> {
         const entity = await this.repository.getByUuid(uuid);
         if (!entity) throw new <NOT_FOUND>();
-        return entity;
+
+        // TODO: Do validation and update of entity properties
+
+        return await this.repository.save(entity);
     }
 }
 `;
 
-export class GetActionTemplate extends BaseTemplate {
+export class UpdateActionTemplate extends BaseTemplate {
     get path(): string {
         return `./src/functions/graphql/modules/${this.modules}/Actions`;
     }
 
     get filename(): string {
-        return pascalCase(`get_${this.module}_action`) + '.ts';
+        return pascalCase(`update_${this.module}_action`) + '.ts';
     }
 
     get content(): string {
         const MODEL = pascalCase(`${this.module}_model`);
-        const NAME = pascalCase(`get_${this.module}_action`);
+        const UPDATE_INPUT = pascalCase(`update_${this.module}_input`);
         const NOT_FOUND = pascalCase(`${this.module}_not_found`);
+        const NAME = pascalCase(`update_${this.module}_action`);
 
         return this.process(TEMPLATE, {
+            UPDATE_INPUT,
             MODEL,
-            NAME,
             NOT_FOUND,
+            NAME,
         });
     }
 }
