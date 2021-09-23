@@ -6,7 +6,7 @@ export interface PaginationResponse<T> {
     max_page: number;
     items: T[];
     current_page: number;
-    has_more
+    has_more: boolean;
 }
 
 @Service()

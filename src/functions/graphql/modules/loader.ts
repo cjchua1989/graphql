@@ -8,6 +8,8 @@ import { Container } from 'typeorm-typedi-extensions';
 import { APIGatewayProxyEvent, APIGatewayProxyResult, Callback, Context } from 'aws-lambda';
 import * as TypeORM from 'typeorm';
 import { Databases } from '../../../libs/Mysql';
+import * as joiful from 'joiful';
+import { ValidationErrorItem } from 'joi';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 function resolverLoader(): NonEmptyArray<Function> {
@@ -37,6 +39,9 @@ export function loadApollo(): ApolloServer {
                 path: error.path,
                 extensions: {
                     code: error.extensions?.exception?.code ?? 'INTERNAL_SERVER_ERROR',
+                    exception: {
+                        details: error.extensions?.exception.details ?? undefined,
+                    },
                 },
             };
         },
@@ -50,7 +55,21 @@ class ApolloSchema {
     private constructor() {
         this.schema = TypeGraphQL.buildSchemaSync({
             resolvers: resolverLoader(),
-            validate: false,
+            validate: (argValue) => {
+                // call joiful validate
+                const { error } = joiful.validate(argValue);
+                if (error) {
+                    error.details = error.details.map((item): ValidationErrorItem => {
+                        return {
+                            type: item.type,
+                            path: item.path,
+                            message: item.message,
+                        };
+                    });
+                    // throw error on failed validation
+                    throw error;
+                }
+            },
             container: Container,
         });
     }
