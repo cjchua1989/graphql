@@ -1,6 +1,8 @@
 import { Connection, createConnection } from 'typeorm';
 import { retrieve } from './Kms';
 
+const STAGE = process.env.STAGE ?? 'local';
+
 enum Dialect {
     mysql = 'mysql',
 }
@@ -61,6 +63,7 @@ export class Databases {
     }
 
     static async closeConnection(): Promise<void> {
+        if (STAGE === 'local') return;
         const closing: Array<Promise<void>> = [];
 
         for (const key in active) {
